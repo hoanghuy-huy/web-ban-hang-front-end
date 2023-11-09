@@ -1,26 +1,52 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <NavBar/>
+    <router-view></router-view>
+    <div class="auth-wrapper">
+      <div class="auth-inner">
+          
+      </div>
+    </div>
+    
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import NavBar from './components/NavBar.vue';
+import axiosClient from './api/axiosClient';
 export default {
-  name: 'App',
+  name:'App',
   components: {
-    HelloWorld
+    NavBar,
+  },
+  async created() {
+    const res = await axiosClient.get('api/users')
+    console.log(res)
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  * {
+    box-sizing: border-box;
+    font-family: Arial;
+  }
+
+  #page-wrap {
+    margin: auto;
+    max-width: 800px;
+    min-height: 100vh;
+  }
+
+  button {
+    background-color: black;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    outline: 0;
+    padding: 16px;
+  }
 </style>
