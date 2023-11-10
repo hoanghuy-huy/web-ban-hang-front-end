@@ -1,6 +1,6 @@
 <template>
-<div class="container">
-    <form class="form">
+  <div class="container">
+    <form class="form" @submit.prevent="handleSubmit">
         <p class="form-title">Sign in to your account</p>
         <div class="input-container">
         <input placeholder="Enter username" type="username" v-model="username" />
@@ -19,27 +19,50 @@
 </div>
 
 </template>
-
 <script>
 import axiosClient from '@/api/axiosClient';
+
 export default {
-    name:'LoginPage',
-    data() {
-        return {
-            username:'',
-            password:''
+  name: 'LoginPage',
+  data() {
+    return {
+      username: '',
+      password: '',
+      error: '',
+    };
+  },
+  mounted() {
+    this.checkTokenExistence();
+  },
+  methods: {
+    async onSignIn() {
+      try {
+        const res = await axiosClient.post('login', {
+          username: this.username,
+          password: this.password,
+        });
+        console.log(res);
+        localStorage.setItem('token', res.data.accessToken);
+        // Chuyển hướng về trang
+        this.$emit('login-success', res.data);
+        this.$router.push('/home');
+      } catch (error) {
+        // Xử lý lỗi đăng nhập sai
+        if (error.response && error.response.status === 404) {
+          this.error = error.response.data.message;
+          alert(this.error + '. Please try again');
+        } else {
+          alert('An error occurred. Please try again later');
         }
+      }
     },
-    methods: {
-       async onSignIn() {
-            const res = await axiosClient.post('login',{
-                username:this.username,
-                password:this.password,
-            })
-            console.log(res.data.accessToken)
-            localStorage.setItem('token',res.data.accessToken)
-        }
+    checkTokenExistence() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.$router.replace('/products');
+      }
     },
+  },
 };
 </script>
 

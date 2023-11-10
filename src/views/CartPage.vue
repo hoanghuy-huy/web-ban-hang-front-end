@@ -4,14 +4,15 @@
     <ProductsList 
       :products="cartItems"
     />
-    <h3 id="total-price">Total: ${{ totalPrice }}</h3>
+    <!-- <h3 id="total-price">Total: ${{ totalPrice }}</h3> -->
     <button id="checkout-button">Proceed to Checkout</button>
   </div>
 </template>
   
 <script>
-import { cartItems } from '@/fake-data';
+
 import ProductsList from '@/components/ProductsList.vue';
+import axiosClient from '../api/axiosClient';
 export default {
     name: 'CartPage',
     components:{
@@ -19,16 +20,34 @@ export default {
     },
     data() {
       return {
-          cartItems,
+          cartItems:[],
+      }
+    },
+    created() {
+      const userDataString = localStorage.getItem('userData');
+      const userData = JSON.parse(userDataString);
+
+      this.getAllCart(userData.id)
+    },
+    methods: {
+      async getAllCart(idUser) {
+        try {
+          const res = await axiosClient.get(`api/users/${idUser}/cart`);
+          this.cartItems = res.data
+          console.log(this.cartItems)
+          // Xử lý dữ liệu giỏ hàng ở đây
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     computed: {
-    totalPrice() {
-      return this.cartItems.reduce(
-        (sum, item) => sum + Number(item.price),
-        0,
-      );
-    }
+    // totalPrice() {
+    //   return this.cartItems.reduce(
+    //     (sum, item) => sum + Number(item.price),
+    //     0,
+    //   );
+    // }
   }
 
 };

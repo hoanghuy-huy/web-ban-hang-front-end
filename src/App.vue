@@ -1,10 +1,16 @@
 <template>
   <div id="app">
-    <NavBar/>
-    <router-view></router-view>
+
     <div class="auth-wrapper">
       <div class="auth-inner">
-          
+          <!-- <RouterView/> -->
+          <template v-if="showLogin">
+              <Login @login-success="onLoginSuccess" />
+          </template>
+          <template v-else>
+            <HomePage :user="user" @logout="logout" />
+            
+          </template>
       </div>
     </div>
     
@@ -12,18 +18,53 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue';
-import axiosClient from './api/axiosClient';
+
+import HomePage from './views/HomePage.vue';
+import Login from './components/Login.vue';
+
 export default {
-  name:'App',
-  components: {
-    NavBar,
+  name: 'App',
+  data() {
+    return {
+      showLogin: true,
+      user: null,
+    };
   },
-  async created() {
-    const res = await axiosClient.get('api/users')
-    console.log(res)
-  }
-}
+  components: {
+    Login,
+    HomePage,
+  },
+  methods: {
+    onLoginSuccess(userData) {
+      this.user = userData;
+      this.showLogin = false;
+      localStorage.setItem('token', userData.accessToken);
+      localStorage.setItem('userData', JSON.stringify(userData));
+    },
+    checkTokenExistence() {
+      
+      const token = localStorage.getItem('token');
+      if (token) {
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+          this.user = JSON.parse(userData);
+        }
+        this.showLogin = false;
+      }
+
+      
+    },
+    logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
+      this.user = null;
+      this.showLogin = true;
+    },
+  },
+  mounted() {
+    this.checkTokenExistence();
+  },
+};
 </script>
 
 <style>

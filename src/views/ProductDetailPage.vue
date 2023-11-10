@@ -1,79 +1,96 @@
 <template>
-  <div id="page-wrap" v-if="product">
-    <div id="img-wrap">
-      <img v-bind:src="product.imageUrl" />
-    </div>
-    <div id="product-details">
-      <h1>{{ product.name }}</h1>
-      <h3 id="price">${{ product.price }}</h3>
-      <p>Average rating: {{ product.averageRating }}</p>
-      <button id="add-to-cart">Add to Cart</button>
-      <h4>Description</h4>
-      <p>{{ product.description }}</p>
-    </div>
+<div id="page-wrap" v-if="product">
+  <div id="img-wrap">
+    <img v-bind:src="product.imageUrl" />
   </div>
-  <NotFoundPage v-else/>
+  <div id="product-details">
+    <h1>{{ product.name }}</h1>
+    <h3 id="price">${{ product.price }}</h3>
+    <p>Average rating: {{ product.averageRating }}</p>
+    <button id="add-to-cart" @click="addToCart">Add to Cart</button>
+    <h4>Description</h4>
+    <p>{{ product.description }}</p>
+  </div>
+</div>
+<NotFoundPage v-else/>
 </template>
 
 <script>
 import NotFoundPage from './NotFoundPage.vue';
 import productApi from '@/api/productApi';
+import axiosClient from '../api/axiosClient';
 export default {
-    name: 'ProductDetailPage',
-    components:{
-      NotFoundPage
-    },
-    data() {
-      return {
-        product:null
-      };
-    },
-    methods: {
+  name: 'ProductDetailPage',
+  components:{
+    NotFoundPage
+  },
+  data() {
+    return {
+      product:null
+    };
+  },
+  methods: {
     retrieveProduct() {
       const productId = this.$route.params.id;
       productApi.getOne(productId)
         .then((response) => {
           this.product = response.data;
+
         })
         .catch((error) => {
           console.log(error);
         });
       },
-      
-    },
-    mounted() {
-      this.retrieveProduct();
-    }
+      async addToCart() {
+        try {
+          const userDataString = localStorage.getItem('userData');
+          const userData = JSON.parse(userDataString);
+
+          const productId = this.product.id;
+          console.log(productId)
+
+          const res = await axiosClient.post(`api/users/${userData.id}/cart/${productId}`);
+          console.log(res)
+          confirm('Added item to cart')
+        } catch (error) {
+          console.log(error);
+        }
+      }
+   
+  },
+  mounted() {
+    this.retrieveProduct();
+  }
 };
 </script>
 
 <style scoped>
-  #page-wrap {
-    margin-top: 16px;
-    padding: 16px;
-    max-width: 600px;
-  }
+#page-wrap {
+  margin-top: 16px;
+  padding: 16px;
+  max-width: 600px;
+}
 
-  #img-wrap {
-    text-align: center;
-  }
+#img-wrap {
+  text-align: center;
+}
 
-  img {
-    width: 400px;
-  }
+img {
+  width: 400px;
+}
 
-  #product-details {
-    padding: 16px;
-    position: relative;
-  }
+#product-details {
+  padding: 16px;
+  position: relative;
+}
 
-  #add-to-cart {
-    width: 100%;
-  }
+#add-to-cart {
+  width: 100%;
+}
 
-  #price {
-    position: absolute;
-    top: 24px;
-    right: 16px;
-  }
+#price {
+  position: absolute;
+  top: 24px;
+  right: 16px;
+}
 </style>

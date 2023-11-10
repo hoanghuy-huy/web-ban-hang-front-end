@@ -1,18 +1,37 @@
 <template>
     <div class="product-container">
-        <img class="product-image" :src="product.imageUrl" />
+        <img class="product-image" :src="product.imageUrlProduct" />
         <div class="details-wrap">
-            <h3>{{ product.name }}</h3>
-            <p>${{ product.price }}</p>
+            <h3>{{ product.nameProduct }}</h3>
+            <p>${{ product.priceProduct }}</p>
         </div>
-        <button class="remove-button">Remove From Cart</button>
+        <button class="remove-button" @click="removeItemFromCart">Remove From Cart</button>
     </div>
 </template>
 
 <script>
+import axiosClient from '../api/axiosClient'
 export default {
     name:'ProductListItem',
-    props:['product']
+    props:['product'],
+    methods: {
+    async removeItemFromCart() {
+        try {
+            const userDataString = localStorage.getItem('userData');
+            const userData = JSON.parse(userDataString);
+            const idUser = userData.id;
+            const idProduct = this.product.id
+            console.log(idProduct)
+            const res = await axiosClient.delete(`api/users/${idUser}/cart/${idProduct}`);
+            console.log(res.data);
+            confirm("Delete item successfully");
+
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 }
 </script>
 

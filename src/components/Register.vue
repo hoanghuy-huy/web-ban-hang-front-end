@@ -3,9 +3,6 @@
     <form class="form">
         <p class="form-title">Register your account</p>
         <div class="input-container">
-        <input placeholder="Enter id" type="text" v-model="id" />
-        </div>
-        <div class="input-container">
         <input placeholder="Enter username" type="text" v-model="username" />
         </div>
         <div class="input-container">
@@ -19,8 +16,8 @@
         Sign in
         </button>
         <p class="signup-link">
-        "Sign Up"
-        <a href="/login">Register</a>
+        
+        <a href="/">"Sign Up"</a>
         </p>
     </form>
 </div>
@@ -29,6 +26,7 @@
 
 <script>
 import axiosClient from '@/api/axiosClient';
+import { v4 as uuidv4 } from 'uuid';
 export default {
     name:'RegisterPage',
     data(){
@@ -41,13 +39,25 @@ export default {
     },
     methods:{
         async onRegister() {
-            const res = await axiosClient.post('register',{
-                id:this.id,
-                username:this.username,
-                password:this.password,
-                email:this.email,
-            })
-            console.log(res.data)
+            try {
+                const id = uuidv4()
+                const res = await axiosClient.post('register',{
+                    id: id,
+                    username:this.username,
+                    password:this.password,
+                    email:this.email,
+                })
+                alert(res.data.message)
+                this.$router.push('/')
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    this.error = error.response.data.message
+                    alert(this.error + '. Please try again'); 
+                } else {
+                    alert('An error occurred. Please try again later')
+                }
+            }
+            
         }
     }
 };
