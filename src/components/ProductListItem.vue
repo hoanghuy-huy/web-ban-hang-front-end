@@ -1,6 +1,6 @@
 <template>
     <div class="product-container">
-        <img class="product-image" :src="product.imageUrlProduct" />
+        <img :src="dynamicImageUrl" />
         <div class="details-wrap">
             <h3>{{ product.nameProduct }}</h3>
             <p>${{ product.priceProduct }}</p>
@@ -14,6 +14,11 @@ import axiosClient from '../api/axiosClient'
 export default {
     name:'ProductListItem',
     props:['product'],
+    computed: {
+    dynamicImageUrl() {
+        return require(`@/assets/${this.product.imageUrl}.jpg`);
+        }
+    } ,
     methods: {
     async removeItemFromCart() {
         try {
@@ -24,14 +29,15 @@ export default {
             console.log(idProduct)
             const res = await axiosClient.delete(`api/users/${idUser}/cart/${idProduct}`);
             console.log(res.data);
+
             confirm("Delete item successfully");
-
-
+            window.location.reload();
         } catch (error) {
             console.log(error);
         }
-    }
-}
+    },
+  
+ }
 }
 </script>
 
@@ -48,8 +54,8 @@ export default {
 
 .product-image {
     flex: 1;
-    height: 100px;
-    max-width: 100px;
+    height: 50px;
+    max-width: 50px;
 }
 
 .details-wrap {

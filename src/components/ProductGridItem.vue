@@ -1,19 +1,24 @@
 <template>
   <div class="product-item">
-    <img v-bind:src="product.imageUrl" />
+    <img :src="dynamicImageUrl" />
     <h3 class="product-name">{{ product.name }}</h3>
     <p class="product-price">${{ product.price }}</p>
-    <router-link v-bind:to="'products/'+product.id">
-        <button> View Details</button>
+    <router-link :to="'products/' + product.id">
+      <button>View Details</button>
     </router-link>
   </div>
 </template>
 
 <script>
 export default {
-    name:'ProductGridItem',
-    props:['product']
-}
+  name: 'ProductGridItem',
+  props: ['product'],
+  computed: {
+    dynamicImageUrl() {
+      return require(`@/assets/${this.product.imageUrl}.jpg`);
+    }
+  }
+};
 </script>
 
 <style scoped>

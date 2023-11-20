@@ -1,7 +1,8 @@
 <template>
+<NavBar/>
 <div id="page-wrap" v-if="product">
   <div id="img-wrap">
-    <img v-bind:src="product.imageUrl" />
+    <img :src="dynamicImageUrl" />
   </div>
   <div id="product-details">
     <h1>{{ product.name }}</h1>
@@ -19,14 +20,16 @@
 import NotFoundPage from './NotFoundPage.vue';
 import productApi from '@/api/productApi';
 import axiosClient from '../api/axiosClient';
+import NavBar from '@/components/NavBar.vue';
 export default {
   name: 'ProductDetailPage',
   components:{
-    NotFoundPage
+    NotFoundPage,
+    NavBar
   },
   data() {
     return {
-      product:null
+      product:null,
     };
   },
   methods: {
@@ -52,11 +55,17 @@ export default {
           const res = await axiosClient.post(`api/users/${userData.id}/cart/${productId}`);
           console.log(res)
           confirm('Added item to cart')
+          window.location.reload();
         } catch (error) {
           console.log(error);
         }
       }
    
+  },
+  computed: {
+    dynamicImageUrl() {
+      return require(`@/assets/${this.product.imageUrl}.jpg`);
+    }
   },
   mounted() {
     this.retrieveProduct();

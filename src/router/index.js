@@ -5,7 +5,11 @@ import ProductsPage from '../views/ProductsPage.vue'
 import NotFoundPage from '../views/NotFoundPage.vue'
 import LoginPage from '../components/Login.vue'
 import RegisterPage from '../components/Register.vue'
-import HomePage from '../views/HomePage.vue'
+import AdminPage from '../views/AdminPage'
+import HandleProduct from '../components/HandleProduct'
+import HandleUsers from '../components/HandleUsers'
+import EditProduct from '../components/EditProduct'
+import EditUser from '../components/EditUser'
 const routes = [
   {
     path:'/products/',
@@ -36,10 +40,30 @@ const routes = [
     component: RegisterPage,
   },
   {
-    path:'/home',
-    name:'HomePage',
-    component: HomePage,
+    path:'/admin',
+    name:'AdminPage',
+    component: AdminPage,
   },
+  {
+    path:'/admin/products',
+    name:'HandleProduct',
+    component: HandleProduct,
+  },
+  {
+    path:'/admin/users',
+    name:'HandleUsers',
+    component: HandleUsers,
+  },
+  {
+    path:'/admin/products/:id/edit',
+    name:'EditProduct',
+    component:EditProduct,
+  },
+  {
+    path:'/admin/users/:id/edit',
+    name:'EditUser',
+    component:EditUser,
+  }
 
 ]
 

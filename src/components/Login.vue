@@ -31,9 +31,6 @@ export default {
       error: '',
     };
   },
-  mounted() {
-    this.checkTokenExistence();
-  },
   methods: {
     async onSignIn() {
       try {
@@ -41,11 +38,12 @@ export default {
           username: this.username,
           password: this.password,
         });
-        console.log(res);
+        console.log(res.data);
         localStorage.setItem('token', res.data.accessToken);
-        // Chuyển hướng về trang
-        this.$emit('login-success', res.data);
-        this.$router.push('/home');
+        localStorage.setItem('userData', JSON.stringify(res.data));
+
+        if(!res.data.admin) this.$router.push('/products');
+        else this.$router.push('/admin');
       } catch (error) {
         // Xử lý lỗi đăng nhập sai
         if (error.response && error.response.status === 404) {
@@ -54,12 +52,6 @@ export default {
         } else {
           alert('An error occurred. Please try again later');
         }
-      }
-    },
-    checkTokenExistence() {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.$router.replace('/products');
       }
     },
   },

@@ -4,11 +4,8 @@
       <h1>Welcome to my shop</h1>
     </router-link>
     <div class="user-info">
+      <h3> Hello {{ username }}</h3>
 
-      <div>
-        <h3>Hello, {{ user.username }}</h3>
-      </div>
-        
       <router-link to="/cart">
         <button class="cart-button">Cart</button>
       </router-link>
@@ -22,18 +19,29 @@
 <script>
 export default {
   name: 'NavBar',
-  props: {
-    user: {
-      type: Object,
-      required: true,
-    },
+  data() {
+    return {
+      user: null, // Khởi tạo dữ liệu người dùng
+      username:'',
+      email:'',
+      id:'',
+    };
   },
   methods: {
     logout() {
-      // Xử lý đăng xuất
-      // Emit sự kiện logout để bắt trong App và thực hiện các xử lý tương ứng
-      this.$emit('logout');
+      // Xóa dữ liệu người dùng khỏi localStorage khi người dùng đăng xuất
+      localStorage.removeItem('userData');
+      this.user = null; // Xóa dữ liệu người dùng trong thành phần
     },
+  },
+  mounted() {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      this.user = JSON.parse(userData);
+      this.username = this.user.username
+      this.id = this.user.id
+      this.email = this.user.email
+    }
   },
 };
 </script>
