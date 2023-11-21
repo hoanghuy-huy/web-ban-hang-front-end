@@ -1,20 +1,24 @@
 <template>
+  <NavBar/>
   <div id="page-wrap">
-      <NavBar/>
+      
       <ProductGrid :products="products"/>
       
   </div>
+  <FooterPage/>
 </template>
 
 <script>
 import ProductGrid from '@/components/ProductGrid.vue';
 import productApi from '../api/productApi'
 import NavBar from '@/components/NavBar.vue';
+import FooterPage from '@/components/FooterPage.vue';
 export default {
     name: 'ProductsPage',
     components:{
       ProductGrid,
-      NavBar
+      NavBar,
+      FooterPage
     },
     data() {
       return {

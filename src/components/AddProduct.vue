@@ -43,7 +43,7 @@
               </label>
   
 
-              <button class="fancy" type="submit" @click.prevent="saveproduct">
+              <button class="fancy" type="submit" @click.prevent="addProduct">
                 <span class="top-key"></span>
                 <span class="text">Save</span>
                 <span class="bottom-key-1"></span>
@@ -78,20 +78,15 @@
       HeaderAdmin,
     },
     methods: {
-      async saveproduct() {
+      async addProduct() {
         try {
-            await axiosClient.post(`api/products/${this.product.id}`, this.product);
+            await axiosClient.post(`api/products`, this.product);
             alert('Update successfully')
             window.location.href = '/admin/products'
         } catch (error) {
             console.log(error)
         }
       },
-    },
-    async created() {
-      const idProduct = this.$route.params.id;
-      const response = await axiosClient.get(`api/products/${idProduct}`);
-      this.product = response.data;
     },
   };
   </script>

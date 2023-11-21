@@ -12,12 +12,13 @@
         </thead>
         <tbody>
           <tr v-for="product in products" :key="product.id">
-            <td><a :href="'products/' + product.id"> {{ product.name }}</a></td>
+            <td><p :href="'products/' + product.id"> {{ product.name }}</p></td>
             <td>{{ product.id }}</td>
 
             <td>
               <a :href="'/admin/products/' + product.id + '/edit'" class="btn btn-primary">Edit</a>
-              <button type="button" class="btn btn-danger">Delete</button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-product-modal"
+                  @click="deleteId(product.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -36,7 +37,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger" >Delete</button>
+              <button type="button" class="btn btn-danger" id="btn-delete-product" @click="handleDelete()">Delete</button>
             </div>
           </div>
         </div>
@@ -47,6 +48,7 @@
   <script>
   import HeaderAdmin from './HeaderAdmin.vue';
   import productApi from '../api/productApi'
+  import axiosClient from '@/api/axiosClient';
   export default {
     name: 'productList',
     components:{
@@ -55,7 +57,7 @@
     data() {
       return {
         products: [],
-        productIdToDelete: null 
+        productIdToDelete: null ,
       };
     },
     methods: {
@@ -68,7 +70,21 @@
           .catch((error) => {
             console.log(error)
           })
+      },
+      deleteId(id){
+        this.productToDelete = id
+      },
+      async handleDelete(){
+        try {
+          await axiosClient.delete(`api/products/${this.productToDelete}`)
+          confirm('Delete Successfully')  
+          window.location.reload()       
+        } catch (error) {
+          console.log(error)
+        }
+
       }
+      
     },
     mounted() {
     this.retrieveProducts(); 

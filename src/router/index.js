@@ -10,6 +10,7 @@ import HandleProduct from '../components/HandleProduct'
 import HandleUsers from '../components/HandleUsers'
 import EditProduct from '../components/EditProduct'
 import EditUser from '../components/EditUser'
+import AddProduct from '../components/AddProduct'
 const routes = [
   {
     path:'/products/',
@@ -63,7 +64,13 @@ const routes = [
     path:'/admin/users/:id/edit',
     name:'EditUser',
     component:EditUser,
-  }
+  },
+  {
+    path:'/admin/add-product',
+    name:'AddProduct',
+    component:AddProduct,
+  },
+
 
 ]
 

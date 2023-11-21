@@ -13,7 +13,9 @@
     <p>{{ product.description }}</p>
   </div>
 </div>
+
 <NotFoundPage v-else/>
+<FooterPage/>
 </template>
 
 <script>
@@ -21,11 +23,13 @@ import NotFoundPage from './NotFoundPage.vue';
 import productApi from '@/api/productApi';
 import axiosClient from '../api/axiosClient';
 import NavBar from '@/components/NavBar.vue';
+import FooterPage from '@/components/FooterPage.vue';
 export default {
   name: 'ProductDetailPage',
   components:{
     NotFoundPage,
-    NavBar
+    NavBar,
+    FooterPage
   },
   data() {
     return {

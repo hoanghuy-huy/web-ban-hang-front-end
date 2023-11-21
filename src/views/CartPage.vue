@@ -1,6 +1,7 @@
-<template>
+<template>    
+  <NavBar/>
   <div id="page-wrap">
-    <NavBar/>
+
     <h1>Shopping Cart</h1>
     <ProductsList 
       :products="cartItems"
@@ -8,17 +9,20 @@
     <h3 id="total-price">Total: ${{ totalPrice }}</h3>
     <button id="checkout-button" @click="order">Proceed to Checkout</button>
   </div>
+  <FooterPage/>
 </template>
   
 <script>
 import NavBar from '@/components/NavBar.vue';
 import ProductsList from '@/components/ProductsList.vue';
 import axiosClient from '../api/axiosClient';
+import FooterPage from '@/components/FooterPage.vue';
 export default {
     name: 'CartPage',
     components:{
       ProductsList,
-      NavBar
+      NavBar,
+      FooterPage
     },
     data() {
       return {

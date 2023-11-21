@@ -17,7 +17,8 @@
 
             <td>
               <a :href="'/admin/users/' + user.id + '/edit'" class="btn btn-primary">Edit</a>
-              <button type="button" class="btn btn-danger">Delete</button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-user-modal"
+                  @click="deleteId(user.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -36,7 +37,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger" >Delete</button>
+              <button type="button" class="btn btn-danger" id="btn-delete-user" @click="handleDelete()">Delete</button>
             </div>
           </div>
         </div>
@@ -47,10 +48,12 @@
   <script>
   import HeaderAdmin from './HeaderAdmin.vue';
   import userApi from '../api/productApi'
+  import axiosClient from '@/api/axiosClient';
   export default {
     name: 'HandleCars',
     components:{
-        HeaderAdmin
+        HeaderAdmin,
+
     },
     data() {
       return {
@@ -68,6 +71,19 @@
           .catch((error) => {
             console.log(error)
           })
+      },
+      deleteId(id){
+        this.userIdToDelete = id
+      },
+      async handleDelete(){
+        try {
+          await axiosClient.delete(`api/users/${this.userIdToDelete}`)
+          confirm('Delete Successfully')  
+          window.location.reload()       
+        } catch (error) {
+          console.log(error)
+        }
+
       }
     },
     mounted() {
