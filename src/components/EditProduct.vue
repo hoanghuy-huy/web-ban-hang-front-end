@@ -84,7 +84,7 @@
             alert('Update successfully')
             window.location.href = '/admin/products'
         } catch (error) {
-            console.log(error)
+            alert(error.response.statusText)
         }
       },
     },
